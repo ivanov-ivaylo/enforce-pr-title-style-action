@@ -1,22 +1,29 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
-import { EventPayloads } from "@octokit/webhooks";
 
 async function run() {
     try {
         core.debug("Starting PR Title check for Jira Issue Key");
         const title = getPullRequestTitle();
-        const regex = getRegex();
+        const projectKeys = getProjectKeys();
 
         core.debug(title);
-        core.debug(regex.toString());
+        core.debug(projectKeys);
+        if (projectKeys.length > 0) {
+            for (let i = 0; i < projectKeys.length; i++) {
+                let currentKey = projectKeys[i];
+                let regex = new RegExp(`(.*?)(${currentKey}-[0-9]+)(.*?)`);
+                if (regex.test(title)) {
+                    core.info("Key " + currentKey + " found!");
+                    core.info("Title Passed");
+                    return
+                }
+            }
 
-        if (!regex.test(title)) {
-            core.debug(`Regex ${regex} failed with title ${title}`);
-            core.info("Title Failed");
             core.setFailed("PullRequest title does not start with a Jira Issue key.");
             return;
         }
+
         core.info("Title Passed");
 
     } catch (error) {
@@ -24,17 +31,12 @@ async function run() {
     }
 }
 
-export function getRegex() {
-    let regex = /(?<=^|[a-z]\-|[\s\p{Punct}&&[^\-]])([A-Z][A-Z0-9_]*-\d+)(?![^\W_])(\s)+(.)+/;
-    const projectKey = core.getInput("projectKey", { required: false });
-    if (projectKey && projectKey !== "") {
-        core.debug(`Project Key ${projectKey}`);
-        if (!/(?<=^|[a-z]\-|[\s\p{Punct}&&[^\-]])([A-Z][A-Z0-9_]*)/.test(projectKey)) {
-            throw new Error(`Project Key  "${projectKey}" is invalid`)
-        }
-        regex = new RegExp(`(^${projectKey}-){1}(\\d)+(\\s)+(.)+`);
+export function getProjectKeys() {
+    let projectKey = core.getInput("projectKey", { required: false });
+    if (projectKey) {
+        return projectKey.split(",");
     }
-    return regex;
+    return [];
 }
 
 export function getPullRequestTitle() {
