@@ -49,5 +49,5 @@ A specific Project Key to always check for.
 - name: Enforce Jira Issue Key in Pull Request Title
   uses: ryanvade/enforce-pr-title-style-action@v1
   with:
-    projectKey: AB
+    projectKey: KEY1,KEY2,KEY3
 ```
