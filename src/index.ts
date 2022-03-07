@@ -8,9 +8,9 @@ async function run() {
         const projectKeys = getProjectKeys();
 
         core.debug(title);
-        core.debug(projectKeys);
+        core.debug(projectKeys.join(","));
         core.info(title);
-        core.info(projectKeys);
+        core.info(projectKeys.join(","));
         if (projectKeys.length > 0) {
             for (let i = 0; i < projectKeys.length; i++) {
                 let currentKey = projectKeys[i];
