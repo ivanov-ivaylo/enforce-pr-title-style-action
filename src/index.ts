@@ -9,13 +9,12 @@ async function run() {
 
         core.debug(title);
         core.debug(projectKeys.join(","));
-        core.info(title);
-        core.info(projectKeys.join(","));
+        core.info("PR Title: " + title);
+        core.info("Project Keys: " + projectKeys.join(","));
         if (projectKeys.length > 0) {
             for (let i = 0; i < projectKeys.length; i++) {
                 let currentKey = projectKeys[i];
                 let regex = new RegExp(`(.*?)(${currentKey}-[0-9]+)(.*?)`);
-                core.info(currentKey);
                 if (regex.test(title)) {
                     core.info("Key " + currentKey + " found!");
                     core.info("Title Passed");

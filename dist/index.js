@@ -76,13 +76,12 @@ require('./sourcemap-register.js');module.exports =
                             projectKeys = getProjectKeys();
                             core.debug(title);
                             core.debug(projectKeys.join(","));
-                            core.info(title);
-                            core.info(projectKeys.join(","));
+                            core.info("PR Title" + title);
+                            core.info("Project Keys: " + projectKeys.join(","));
                             if (projectKeys.length > 0) {
                                 for (i = 0; i < projectKeys.length; i++) {
                                     currentKey = projectKeys[i];
                                     regex = new RegExp("(.*?)(" + currentKey + "-[0-9]+)(.*?)");
-                                    core.info(currentKey);
                                     if (regex.test(title)) {
                                         core.info("Key " + currentKey + " found!");
                                         core.info("Title Passed");
